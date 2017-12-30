@@ -4,6 +4,8 @@ LABEL maintainer="Michael Miklis / <info@michaelmiklis.de>"
 
 ENV  DEBIAN_FRONTEND noninteractive
 
+RUN [ "cross-build-start" ]
+
 # Install HAbridge from bwsystems's repository
 RUN LATEST_RELEASE=$(curl -L -s -H 'Accept: application/json' https://github.com/bwssytems/ha-bridge/releases/latest) && \
     LATEST_VERSION=$(echo $LATEST_RELEASE | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/' | sed 's/^.\{1\}//')  && \
@@ -22,6 +24,8 @@ RUN LATEST_RELEASE=$(curl -L -s -H 'Accept: application/json' https://github.com
     chmod +x /bridge/run.sh && \
     echo '#!/bin/bash' > /bridge/run.sh && \
     echo java -jar \$PORT \$KEY \$CONFIG \$IP \$GARDEN /bridge/ha-bridge.jar >> /bridge/run.sh
+
+RUN [ "cross-build-end" ]
 
 WORKDIR /bridge
 
